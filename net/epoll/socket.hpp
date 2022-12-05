@@ -85,6 +85,7 @@ public:
     int get_fd();
     ssize_t on_read();
     ssize_t on_write();
+    void on_connecting();
     int on_close();
     static int make_socket_non_blocking(int fd);
     void update_peer_info();

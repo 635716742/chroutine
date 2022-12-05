@@ -15,7 +15,7 @@ int main(int argc, char **argv)
             }
             std::string say = "hello server";
             while (cli->is_connected()) {                
-                cli->write((byte_t*)say.data(), say.length());
+                cli->write((byte_t*)say.data(), say.length() + 1);
                 raw_data_block_sptr_t d = nullptr;
                 cli->read(d);
                 if (d) {

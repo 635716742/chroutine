@@ -38,6 +38,7 @@ void engine_t::init(size_t init_pool_size)
     m_epoll_thread = chroutine_thread_t::new_thread();
     m_epoll_thread->set_type(thread_type_t::epoll);
     m_epoll_thread->start(0);
+    thread_ms_sleep(10); //等待epoll线程初始化  工作线程初始化中会使用
 #endif
 
     for (size_t i = 0; i < init_pool_size; i++) {

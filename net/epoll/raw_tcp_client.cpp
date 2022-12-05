@@ -33,7 +33,7 @@ int raw_tcp_client_t::connect()
     int ret;
     struct sockaddr_in s_addr;
     memset(&s_addr, 0, sizeof (s_addr));
-    s_addr.sin_family = AF_UNSPEC;
+    s_addr.sin_family = AF_INET;//AF_UNSPEC;
     s_addr.sin_port = htons(std::stoi(m_port));
     s_addr.sin_addr.s_addr = inet_addr(m_host.c_str());
     ret = ::connect(m_socket->get_fd(), (struct sockaddr*)&s_addr, sizeof (struct sockaddr));
@@ -46,7 +46,8 @@ int raw_tcp_client_t::connect()
 
             int conn_result = -1;    // -2 timeout, -1 failure, 0 success
             ENGIN.create_son_chroutine([&](void *) {
-                SLEEP(15000);    // timeout in 15 seconds
+                m_socket->on_connecting();
+                WAIT(15000);    // timeout in 15 seconds
                 (*m_conn_result_chan) << -2;
             }, nullptr);
             (*m_conn_result_chan) >> conn_result;
@@ -75,6 +76,12 @@ int raw_tcp_client_t::connect()
         m_socket.reset();
     }
     return ret;
+}
+
+void raw_tcp_client_t::on_connected(int state)
+{
+    m_state = client_state_t::connected;
+    (*m_conn_result_chan) << state;
 }
 
 void raw_tcp_client_t::on_new_data(epoll_handler_it *which, byte_t* data, ssize_t count)

@@ -145,6 +145,11 @@ ssize_t socket_t::on_write()
     return total_written;   
 }
 
+void socket_t::on_connecting()
+{
+    m_poller->mod_fd(m_fd, EPOLLIN | EPOLLOUT | EPOLLET);
+}
+
 int socket_t::on_close()
 {    
     SPDLOG(INFO, "socket_t::on_close(), m_fd={}, remote: {}:{}"

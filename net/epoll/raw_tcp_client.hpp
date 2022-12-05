@@ -31,6 +31,7 @@ public:
     virtual void write(byte_t* data, ssize_t len);
     virtual void on_new_data(epoll_handler_it *which, byte_t* data, ssize_t count);
     virtual void on_closed(epoll_handler_it *which);
+    virtual void on_connected(int state);
     virtual int select(int wait_ms);
     bool is_connected();
 
